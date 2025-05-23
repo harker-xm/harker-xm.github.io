@@ -1,0 +1,739 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cat.png">
+  <link rel="icon" href="/img/cat.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Yifan Xie">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="论文复现本文章复现的是Sofiane Kharbech等，于2020年在IEEE Wireless Communications Letters发表的论文《Denoising Higher-Order Moments for Blind Digital Modulation Identification in Multiple-Antenna Systems》（多天线系统中数字调制盲识别的高阶矩去">
+<meta property="og:type" content="article">
+<meta property="og:title" content="调制识别HOM去噪方法">
+<meta property="og:url" content="http://example.com/2025/05/24/%E8%B0%83%E5%88%B6%E8%AF%86%E5%88%ABHOM%E5%8E%BB%E5%99%AA%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="harker-xm">
+<meta property="og:description" content="论文复现本文章复现的是Sofiane Kharbech等，于2020年在IEEE Wireless Communications Letters发表的论文《Denoising Higher-Order Moments for Blind Digital Modulation Identification in Multiple-Antenna Systems》（多天线系统中数字调制盲识别的高阶矩去">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-23T16:07:42.000Z">
+<meta property="article:modified_time" content="2025-05-23T17:15:29.903Z">
+<meta property="article:author" content="Yifan Xie">
+<meta property="article:tag" content="论文复现">
+<meta property="article:tag" content="信号处理">
+<meta property="article:tag" content="调制识别">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>调制识别HOM去噪方法 / harker-xm</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>harker-xm的Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="调制识别HOM去噪方法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-05-24 00:07" pubdate>
+          2025年5月24日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">调制识别HOM去噪方法</h1>
+            
+              <p id="updated-time" class="note note-info" style="display: none">
+                
+                  
+                    本文最后更新于 2025-05-24T01:15:29+08:00
+                  
+                  
+
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="论文复现"><a href="#论文复现" class="headerlink" title="论文复现"></a>论文复现</h3><p>本文章复现的是<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/author/37086426257">Sofiane Kharbech</a>等，于2020年在IEEE Wireless Communications Letters发表的论文<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/8968406">《Denoising Higher-Order Moments for Blind Digital Modulation Identification in Multiple-Antenna Systems》</a>（多天线系统中数字调制盲识别的高阶矩去噪方法）</p>
+<p>首先编码三个函数文件，分别实现：</p>
+<ol>
+<li><p><code>f_HOS_Extraction.m</code><br> 从接收信号中提取高阶统计量（HOS）</p>
+ <figure class="highlight m"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs m">function HOS<span class="hljs-built_in">=</span>f_HOS_Extraction(M,SNR,K,Nt,Nr,pbee,cfo,phznoise)<br>switch M<br>   case <span class="hljs-number">1</span><br>      x <span class="hljs-built_in">=</span> randi([<span class="hljs-number">0</span>,<span class="hljs-number">1</span>],<span class="hljs-number">1</span>,Nt*K);<br>      x_mod <span class="hljs-built_in">=</span> pskmod(x,<span class="hljs-number">2</span>);<br>   case <span class="hljs-number">2</span><br>      x <span class="hljs-built_in">=</span> randi([<span class="hljs-number">0</span>,<span class="hljs-number">3</span>],<span class="hljs-number">1</span>,Nt*K);<br>      x_mod <span class="hljs-built_in">=</span> pskmod(x,<span class="hljs-number">4</span>);<br>   case <span class="hljs-number">3</span><br>      x <span class="hljs-built_in">=</span> randi([<span class="hljs-number">0</span>,<span class="hljs-number">7</span>],<span class="hljs-number">1</span>,Nt*K);<br>      x_mod <span class="hljs-built_in">=</span> pskmod(x,<span class="hljs-number">8</span>);<br>   case <span class="hljs-number">4</span><br>      x <span class="hljs-built_in">=</span> randi([<span class="hljs-number">0</span>,<span class="hljs-number">3</span>],<span class="hljs-number">1</span>,Nt*K);<br>      x_mod <span class="hljs-built_in">=</span> pammod(x,<span class="hljs-number">4</span>);<br>   case <span class="hljs-number">5</span><br>      x <span class="hljs-built_in">=</span> randi([<span class="hljs-number">0</span>,<span class="hljs-number">7</span>],<span class="hljs-number">1</span>,Nt*K);<br>      x_mod <span class="hljs-built_in">=</span> pammod(x,<span class="hljs-number">8</span>);<br>   case <span class="hljs-number">6</span><br>      x <span class="hljs-built_in">=</span> randi([<span class="hljs-number">0</span>,<span class="hljs-number">15</span>],<span class="hljs-number">1</span>,Nt*K);<br>      x_mod <span class="hljs-built_in">=</span> qammod(x,<span class="hljs-number">16</span>);<br>   otherwise<br>      disp(<span class="hljs-string">&#x27;Unknown modulation type&#x27;</span>);<br>end<br>scale <span class="hljs-built_in">=</span> modnorm(x_mod,<span class="hljs-string">&#x27;avpow&#x27;</span>,<span class="hljs-number">1</span>);   <span class="hljs-comment">% scaling factor</span><br>x_mod <span class="hljs-built_in">=</span> x_mod*scale;                <span class="hljs-comment">% scaling avg. power to 1W</span><br><span class="hljs-comment">%------------------------------------------------&gt; Channel (MIMO + AWGN)</span><br>H <span class="hljs-built_in">=</span> randn(Nr,Nt)+<span class="hljs-number">1</span>i*randn(Nr,Nt);<br>y_mimo <span class="hljs-built_in">=</span> H*reshape(x_mod,Nt,[]);<br>cfo_mat <span class="hljs-built_in">=</span> repmat(exp(<span class="hljs-number">2</span>i*pi*(<span class="hljs-number">1</span>:<span class="hljs-number">1</span>:K)*cfo),Nr,<span class="hljs-number">1</span>);<br>y_mimo <span class="hljs-built_in">=</span> y_mimo.*cfo_mat;<br><span class="hljs-built_in">if</span> phznoise ~<span class="hljs-built_in">=</span><span class="hljs-number">0</span><br>   for cptNr<span class="hljs-built_in">=</span><span class="hljs-number">1</span>:Nr<br>       y_mimo(cptNr,:) <span class="hljs-built_in">=</span> phznoise(y_mimo(cptNr,:).<span class="hljs-string">&#x27;).&#x27;</span>;<br>   end<br>end<br>y_mimo_SNR <span class="hljs-built_in">=</span> awgn(y_mimo,SNR,<span class="hljs-string">&#x27;measured&#x27;</span>);<br>Pb <span class="hljs-built_in">=</span> mean(abs(reshape(y_mimo_SNR-y_mimo,<span class="hljs-number">1</span>,[]).^<span class="hljs-number">2</span>)) + pbee; <span class="hljs-comment">% noise power</span><br><br>R <span class="hljs-built_in">=</span> mean(real(x_mod).^<span class="hljs-number">4</span>) / mean(real(x_mod).^<span class="hljs-number">2</span>);<br>[W,yeg] <span class="hljs-built_in">=</span> f_SCMA(Nt,Nr,y_mimo_SNR,R);<br>Pbf <span class="hljs-built_in">=</span> Pb*W.<span class="hljs-string">&#x27;*conj(W); % power of the filtered noise</span><br><span class="hljs-string"></span><br><span class="hljs-string">% bf = W.&#x27;</span>*(y_mimo_SNR-y_mimo)  <span class="hljs-comment">% fchk</span><br><span class="hljs-comment">% mean(abs(bf(1,:).^2))         % fchk</span><br><br><span class="hljs-comment">%----&gt; HOS extraction</span><br><br>for cpt<span class="hljs-built_in">=</span><span class="hljs-number">1</span>:Nt<br>    HOS(cpt,:) <span class="hljs-built_in">=</span> f_CalcHOS(yeg(cpt,:),Pbf(cpt,cpt));<br>end<br><br></code></pre></td></tr></table></figure></li>
+<li><p><code>f_CalcHOS.m</code><br> 该函数计算输入信号的各种高阶矩和累积量。它计算矩，如m20， m40, m60，以及累积量，如c40， c60等。</p>
+ <figure class="highlight m"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><code class="hljs m"><span class="hljs-comment">% x  : the signal</span><br><span class="hljs-comment">% Pb : the noise power</span><br>function hos<span class="hljs-built_in">=</span>f_CalcHOS(x, Pb)<br>x<span class="hljs-built_in">=</span>x-mean(x);<br><br>m20<span class="hljs-built_in">=</span>real(mean(x.^<span class="hljs-number">2</span>));<br>m22<span class="hljs-built_in">=</span>real(mean(conj(x).^<span class="hljs-number">2</span>));<br>m40<span class="hljs-built_in">=</span>real(mean(x.^<span class="hljs-number">4</span>));<br>m60<span class="hljs-built_in">=</span>real(mean(x.^<span class="hljs-number">6</span>));<br><br>m21y<span class="hljs-built_in">=</span>real(mean(x.*(conj(x))));<br>m41y<span class="hljs-built_in">=</span>real(mean((x.^<span class="hljs-number">3</span>).*(conj(x))));<br>m42y<span class="hljs-built_in">=</span>real(mean((x.^<span class="hljs-number">2</span>).*(conj(x).^<span class="hljs-number">2</span>)));<br>m43y<span class="hljs-built_in">=</span>real(mean(x.*(conj(x).^<span class="hljs-number">3</span>)));<br>m61y<span class="hljs-built_in">=</span>real(mean((x.^<span class="hljs-number">5</span>).*(conj(x))));<br>m62y<span class="hljs-built_in">=</span>real(mean((x.^<span class="hljs-number">4</span>).*(conj(x).^<span class="hljs-number">2</span>)));<br>m63y<span class="hljs-built_in">=</span>real(mean((x.^<span class="hljs-number">3</span>).*(conj(x).^<span class="hljs-number">3</span>)));<br>m84y<span class="hljs-built_in">=</span>real(mean((x.^<span class="hljs-number">4</span>).*(conj(x).^<span class="hljs-number">4</span>)));<br><br><span class="hljs-comment">% denoising</span><br>m21<span class="hljs-built_in">=</span>m21y-Pb;<br>m41<span class="hljs-built_in">=</span>m41y-<span class="hljs-number">3</span>*m20*Pb;<br>m42<span class="hljs-built_in">=</span>m42y-<span class="hljs-number">2</span>*Pb^<span class="hljs-number">2</span>-<span class="hljs-number">4</span>*Pb*m21;<br>m43<span class="hljs-built_in">=</span>m43y-<span class="hljs-number">3</span>*m22*Pb;<br>m61<span class="hljs-built_in">=</span>m61y-<span class="hljs-number">5</span>*m40*Pb;<br>m62<span class="hljs-built_in">=</span>m62y-<span class="hljs-number">12</span>*m20*Pb^<span class="hljs-number">2</span>-<span class="hljs-number">8</span>*m41*Pb;<br>m63<span class="hljs-built_in">=</span>m63y-<span class="hljs-number">18</span>*m21*Pb^<span class="hljs-number">2</span>-<span class="hljs-number">9</span>*m42*Pb-<span class="hljs-number">6</span>*Pb^<span class="hljs-number">3</span>;<br>m84<span class="hljs-built_in">=</span>m84y-<span class="hljs-number">16</span>*m63*Pb-<span class="hljs-number">72</span>*m42*Pb^<span class="hljs-number">2</span>-<span class="hljs-number">96</span>*m21*Pb^<span class="hljs-number">3</span>-<span class="hljs-number">24</span>*Pb^<span class="hljs-number">4</span>;<br><br><span class="hljs-comment">%--------------------------&gt; Cumulants &lt;--------------------------%</span><br><br>c40<span class="hljs-built_in">=</span>m40-<span class="hljs-number">3</span>*(m20.^<span class="hljs-number">2</span>);<br>c60<span class="hljs-built_in">=</span>m60-<span class="hljs-number">15</span>*m20*m40+<span class="hljs-number">30</span>*(m20.^<span class="hljs-number">3</span>);<br><br>c41<span class="hljs-built_in">=</span>m41-<span class="hljs-number">3</span>*m20*m21;<br>c42<span class="hljs-built_in">=</span>m42-(abs(m20).^<span class="hljs-number">2</span>)-<span class="hljs-number">2</span>*(m21.^<span class="hljs-number">2</span>);<br>c61<span class="hljs-built_in">=</span>m61-<span class="hljs-number">5</span>*m21*m40-<span class="hljs-number">10</span>*m20*m41+<span class="hljs-number">30</span>*m21*(m20.^<span class="hljs-number">2</span>);<br>c62<span class="hljs-built_in">=</span>m62-<span class="hljs-number">6</span>*m42*m20-<span class="hljs-number">8</span>*m21*m41-m22*m40+<span class="hljs-number">6</span>*m22*m20^<span class="hljs-number">2</span>+<span class="hljs-number">24</span>*m20*m21^<span class="hljs-number">2</span>;<br>c63<span class="hljs-built_in">=</span>m63-<span class="hljs-number">9</span>*m42*m21+<span class="hljs-number">12</span>*(m21.^<span class="hljs-number">3</span>)-<span class="hljs-number">3</span>*m20*m43-<span class="hljs-number">3</span>*m22*m41+<span class="hljs-number">18</span>*m20*m21*m22;<br><br><span class="hljs-comment">%--------------------------&gt; Normalization &lt;--------------------------%</span><br><br>m40_n<span class="hljs-built_in">=</span>m40/m21^<span class="hljs-number">2</span>;<br>m41_n<span class="hljs-built_in">=</span>m41/m21^<span class="hljs-number">2</span>;<br>m42_n<span class="hljs-built_in">=</span>m42/m21^<span class="hljs-number">2</span>;<br>m60_n<span class="hljs-built_in">=</span>m60/m21^<span class="hljs-number">3</span>;<br>m61_n<span class="hljs-built_in">=</span>m61/m21^<span class="hljs-number">3</span>;<br>m62_n<span class="hljs-built_in">=</span>m62/m21^<span class="hljs-number">3</span>;<br>m63_n<span class="hljs-built_in">=</span>m63/m21^<span class="hljs-number">3</span>;<br>m84_n<span class="hljs-built_in">=</span>m84/m21^<span class="hljs-number">4</span>;<br><br>c40_n<span class="hljs-built_in">=</span>c40/m21^<span class="hljs-number">2</span>;<br>c41_n<span class="hljs-built_in">=</span>c41/m21^<span class="hljs-number">2</span>;<br>c42_n<span class="hljs-built_in">=</span>c42/m21^<span class="hljs-number">2</span>;<br>c60_n<span class="hljs-built_in">=</span>c60/m21^<span class="hljs-number">3</span>;<br>c61_n<span class="hljs-built_in">=</span>c61/m21^<span class="hljs-number">3</span>;<br>c62_n<span class="hljs-built_in">=</span>c62/m21^<span class="hljs-number">3</span>;<br>c63_n<span class="hljs-built_in">=</span>c63/m21^<span class="hljs-number">3</span>;<br><br>m41y_n<span class="hljs-built_in">=</span>m41y/m21y^<span class="hljs-number">2</span>;<br>m42y_n<span class="hljs-built_in">=</span>m42y/m21y^<span class="hljs-number">2</span>;<br>m61y_n<span class="hljs-built_in">=</span>m61y/m21y^<span class="hljs-number">3</span>;<br>m62y_n<span class="hljs-built_in">=</span>m62y/m21y^<span class="hljs-number">3</span>;<br>m63y_n<span class="hljs-built_in">=</span>m63y/m21y^<span class="hljs-number">3</span>;<br>m84y_n<span class="hljs-built_in">=</span>m84y/m21y^<span class="hljs-number">4</span>;<br><br>hos<span class="hljs-built_in">=</span>real([m40_n m41_n m41y_n m42_n m42y_n m60_n m61_n m61y_n m62_n m62y_n m63_n m63y_n m84_n m84y_n ...<br>          c40_n c41_n c42_n c60_n c61_n c62_n c63_n]);<br></code></pre></td></tr></table></figure></li>
+<li><p><code>f_SCMA.m</code><br> 该函数为MIMO系统执行信号盲源分离（BSS）。利用提取的信号特征和噪声特征，对接收信号进行白化变换，然后利用随机梯度下降（SGD）估计BSS的分离矩阵W。</p>
+ <figure class="highlight m"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs m">function [G,yeg]<span class="hljs-built_in">=</span>f_SCMA(Nt,Nr,y_mimo_SNR,R)<br><span class="hljs-comment">%----------------------------------&gt; Pre-processing: batch whitening</span><br>Ry <span class="hljs-built_in">=</span> (y_mimo_SNR*y_mimo_SNR<span class="hljs-string">&#x27;)/size(y_mimo_SNR,2);</span><br><span class="hljs-string">[U,SIG] = eig(Ry);                          % Eigendecomposition</span><br><span class="hljs-string">SIG = SIG(Nr:-1:(Nr-Nt+1),Nr:-1:(Nr-Nt+1)); % Required condition: Nr&gt;=Nt</span><br><span class="hljs-string">U = U(:,Nr:-1:(Nr-Nt+1));</span><br><span class="hljs-string">B = (SIG^-0.5)*U&#x27;</span>; <span class="hljs-comment">% Whitening matrix</span><br>YW <span class="hljs-built_in">=</span> B*y_mimo_SNR; <span class="hljs-comment">% Whited signals</span><br><br><span class="hljs-comment">%----------------------------------&gt; Estimating the separator W    </span><br>W <span class="hljs-built_in">=</span> eye(Nt);                       <span class="hljs-comment">% Initialization</span><br><span class="hljs-comment">% W = toeplitz(1:Nt);</span><br><span class="hljs-comment">% W = toeplitz(1:Nr,1:Nt);</span><br>mu<span class="hljs-built_in">=</span><span class="hljs-number">1</span>e-<span class="hljs-number">2</span>;                           <span class="hljs-comment">% Step size</span><br><span class="hljs-comment">% mu=5e-3;</span><br>for ns<span class="hljs-built_in">=</span><span class="hljs-number">1</span>:size(YW,<span class="hljs-number">2</span>)                <span class="hljs-comment">% Stochastic gradient descent (SGD)</span><br>    YW_ns <span class="hljs-built_in">=</span> YW(:,ns);<br>    z_ns <span class="hljs-built_in">=</span> W.<span class="hljs-string">&#x27;*YW_ns;</span><br><span class="hljs-string">    for n=1:Nt</span><br><span class="hljs-string">        e = (real(z_ns(n)).^2-R).*real(z_ns(n));</span><br><span class="hljs-string">        W(:,n) = W(:,n)-mu.*e.*conj(YW_ns);</span><br><span class="hljs-string">    end</span><br><span class="hljs-string">    W = f_GramSchmidt(W); % Post-processing: orthonormalization</span><br><span class="hljs-string">end</span><br><span class="hljs-string"></span><br><span class="hljs-string">%----------------------------------&gt; Applying BSS</span><br><span class="hljs-string">yeg = W.&#x27;</span>*YW;<br>G <span class="hljs-built_in">=</span> B.<span class="hljs-string">&#x27;*W;</span><br><span class="hljs-string">function Q = f_GramSchmidt(W)</span><br><span class="hljs-string">Q = zeros(size(W));</span><br><span class="hljs-string">Q(:,1) = W(:,1)/norm(W(:,1));</span><br><span class="hljs-string">for i=2:size(W,2)</span><br><span class="hljs-string">    s_proj = 0;</span><br><span class="hljs-string">    for j=1:i-1</span><br><span class="hljs-string">        s_proj = s_proj+((Q(:,j)&#x27;</span>*W(:,i))/(Q(:,j)<span class="hljs-string">&#x27;*Q(:,j)))*Q(:,j);</span><br><span class="hljs-string">    end</span><br><span class="hljs-string">    e = W(:,i)-s_proj;</span><br><span class="hljs-string">    Q(:,i) = e/norm(e);</span><br><span class="hljs-string">end</span><br></code></pre></td></tr></table></figure></li>
+</ol>
+<p>随后，我们需要生成高阶统计（HOS）特征的数据集。模拟各种调制方案下的MIMO传输，计算每个传输信号的HOS特征，并将数据组织成矩阵。生成的数据集是一个三维矩阵（mat_HOS），形状为&#x3D;&#x3D;特征向量 × 样本指标 × MIMO系统的天线指标&#x3D;&#x3D;。</p>
+<figure class="highlight m"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs m"><span class="hljs-comment">% 1) 本文件用于生成指定数字调制方式和传输配置的高阶统计量(HOS)数据集</span><br><span class="hljs-comment">% 2) 生成的数据集名为&#x27;mat_HOS&#x27;，为三维矩阵：</span><br><span class="hljs-comment">%    - 第一维：HOS向量（特征维度）</span><br><span class="hljs-comment">%    - 第二维：样本索引（HOS向量编号）</span><br><span class="hljs-comment">%    - 第三维：天线编号（MIMO系统接收天线）</span><br><span class="hljs-comment">% 3) 若&#x27;rng shuffle&#x27;不可用，使用以下替代方案：</span><br><span class="hljs-comment">% clk=clock;</span><br><span class="hljs-comment">% RandStream.setGlobalStream(RandStream(&#x27;mt19937ar&#x27;,&#x27;Seed&#x27;,str2num(strrep(num2str(clk(4:6)),&#x27; &#x27;,&#x27;&#x27;))*1e3));</span><br><span class="hljs-comment">% 4) 若未自动启用并行处理，执行以下操作：</span><br><span class="hljs-comment">% parpool(&#x27;local&#x27;,3)        % 启动3个本地工作进程</span><br><span class="hljs-comment">% Linux系统可能需要先运行：</span><br><span class="hljs-comment">% ! sudo chmod -R 777 /home/user_name/.matlab/local_cluster_jobs/R2017a</span><br><span class="hljs-comment">% 注：若无并行计算工具箱，需将最内层循环的parfor改为for</span><br><span class="hljs-comment">% 5) 运行结束后保存工作区：</span><br><span class="hljs-comment">% 需保留所有变量，供DetectionResults.m生成结果</span><br>rng shuffle<br>clc<br>clear<br><span class="hljs-comment">%--------------------------------------------&gt; Parameters</span><br>Nt <span class="hljs-built_in">=</span> <span class="hljs-number">2</span>;    <span class="hljs-comment">% 发射天线数量</span><br>Nr <span class="hljs-built_in">=</span> <span class="hljs-number">6</span>;    <span class="hljs-comment">% 接收天线数量</span><br>K <span class="hljs-built_in">=</span> <span class="hljs-number">4000</span>;  <span class="hljs-comment">% 传输的MIMO符号数量</span><br>M <span class="hljs-built_in">=</span> [<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span>]; <span class="hljs-comment">% 调制类型索引（对应不同调制方式）, cf. &#x27;f_HOS_Extraction.m&#x27; for the names</span><br><span class="hljs-comment">% M = [1 2 3];</span><br>SNR <span class="hljs-built_in">=</span> -<span class="hljs-number">2</span>:<span class="hljs-number">1</span>:<span class="hljs-number">15</span>;     <span class="hljs-comment">% 信噪比范围（-2dB到15dB）</span><br>lMC <span class="hljs-built_in">=</span> <span class="hljs-number">2000</span>;        <span class="hljs-comment">% 蒙特卡洛模拟次数</span><br>eestd <span class="hljs-built_in">=</span> <span class="hljs-number">0</span>;         <span class="hljs-comment">% 噪声功率估计误差标准差</span><br>cfo <span class="hljs-built_in">=</span> <span class="hljs-number">0</span>;           <span class="hljs-comment">% 载波频率偏移</span><br><span class="hljs-comment">% cfo = 1e-4;</span><br>phznoise <span class="hljs-built_in">=</span> <span class="hljs-number">0</span>;      <span class="hljs-comment">% 相位噪声模型</span><br><span class="hljs-comment">% phznoise = comm.PhaseNoise(&#x27;Level&#x27;,-3,&#x27;FrequencyOffset&#x27;,2e-3,&#x27;SampleRate&#x27;,1);</span><br><br><span class="hljs-comment">%--------------------------------------------&gt; Main processing</span><br>mat_HOS <span class="hljs-built_in">=</span> []; <span class="hljs-comment">% HOS特征（特征×样本×天线）</span><br>for cptSNR<span class="hljs-built_in">=</span><span class="hljs-number">1</span>:length(SNR)<br>    for cptM<span class="hljs-built_in">=</span><span class="hljs-number">1</span>:length(M)<br>        Pb_ee <span class="hljs-built_in">=</span> eestd*randn(<span class="hljs-number">1</span>,lMC);<br>        parfor cptMC<span class="hljs-built_in">=</span><span class="hljs-number">1</span>:lMC<br>            <span class="hljs-comment">% 特征提取函数</span><br>            HOS <span class="hljs-built_in">=</span> f_HOS_Extraction(M(cptM),SNR(cptSNR),K,Nt,Nr,Pb_ee(cptMC),cfo,phznoise);<br>            <span class="hljs-comment">% 拼接特征矩阵（第三维为天线，第二维为样本）</span><br>            mat_HOS <span class="hljs-built_in">=</span> [mat_HOS; permute(HOS,[<span class="hljs-number">3</span> <span class="hljs-number">2</span> <span class="hljs-number">1</span>])];    <br>        end<br>        disp([<span class="hljs-string">&#x27;M = &#x27;</span> num2str(M(cptM)) <span class="hljs-string">&#x27; completed.&#x27;</span>])       <br>    end<br>end<br>mat_HOS <span class="hljs-built_in">=</span> permute(mat_HOS,[<span class="hljs-number">2</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span>]);<span class="hljs-comment">% 调整维度为[特征数×样本数×天线数]</span><br>clearvars -except M SNR Nt Nr lMC mat_HOS<br></code></pre></td></tr></table></figure>
+
+<p>最后，我们使用HOS数据集（mat_HOS）根据计算的特征对调制类型进行分类。它通过绘制正确识别概率（PCI）作为信噪比的函数来评估调制识别的性能。</p>
+<figure class="highlight m"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs m"><span class="hljs-comment">% 1) 本文件用于绘制特定场景下正确识别概率（PCI）随信噪比（SNR）变化曲线</span><br><span class="hljs-comment">% 2) 支持三种特征组合场景：</span><br><span class="hljs-comment">%    - &#x27;仅使用高阶累积量（HOC）&#x27;</span><br><span class="hljs-comment">%    - &#x27;HOC + 未去噪高阶矩（HOM）&#x27;</span><br><span class="hljs-comment">%    - &#x27;HOC + 去噪后HOM&#x27;</span><br><span class="hljs-comment">% 3) 运行前需加载&#x27;GenDataset.m&#x27;生成的所有变量</span><br>HOSth <span class="hljs-built_in">=</span> &#123; <span class="hljs-comment">% Theoretical HOS值，对应论文表2</span><br><span class="hljs-string">&#x27;   &#x27;</span>  <span class="hljs-string">&#x27;B-PSK&#x27;</span> <span class="hljs-string">&#x27;Q-PSK&#x27;</span> <span class="hljs-string">&#x27;8-PSK&#x27;</span> <span class="hljs-string">&#x27;4-ASK&#x27;</span> <span class="hljs-string">&#x27;8-ASK&#x27;</span> <span class="hljs-string">&#x27;16-QAM&#x27;</span>    ;<br><span class="hljs-string">&#x27;M40&#x27;</span>    <span class="hljs-number">1</span>      -<span class="hljs-number">1</span>       <span class="hljs-number">0</span>       <span class="hljs-number">1.64</span>    <span class="hljs-number">1.77</span>    -<span class="hljs-number">0.67</span>     ;<br><span class="hljs-string">&#x27;M41&#x27;</span>    <span class="hljs-number">1</span>       <span class="hljs-number">0</span>       <span class="hljs-number">0</span>       <span class="hljs-number">1.64</span>    <span class="hljs-number">1.77</span>     <span class="hljs-number">0</span>        ;<br><span class="hljs-string">&#x27;M42&#x27;</span>    <span class="hljs-number">1</span>       <span class="hljs-number">1</span>       <span class="hljs-number">1</span>       <span class="hljs-number">1.64</span>    <span class="hljs-number">1.77</span>     <span class="hljs-number">1.32</span>     ;<br><span class="hljs-string">&#x27;M60&#x27;</span>    <span class="hljs-number">1</span>       <span class="hljs-number">0</span>       <span class="hljs-number">0</span>       <span class="hljs-number">2.92</span>    <span class="hljs-number">3.62</span>     <span class="hljs-number">0</span>        ;<br><span class="hljs-string">&#x27;M61&#x27;</span>    <span class="hljs-number">1</span>      -<span class="hljs-number">1</span>       <span class="hljs-number">0</span>       <span class="hljs-number">2.92</span>    <span class="hljs-number">3.62</span>    -<span class="hljs-number">1.32</span>     ;<br><span class="hljs-string">&#x27;M62&#x27;</span>    <span class="hljs-number">1</span>       <span class="hljs-number">0</span>       <span class="hljs-number">0</span>       <span class="hljs-number">2.92</span>    <span class="hljs-number">3.62</span>     <span class="hljs-number">0</span>        ;<br><span class="hljs-string">&#x27;M63&#x27;</span>    <span class="hljs-number">1</span>       <span class="hljs-number">1</span>       <span class="hljs-number">1</span>       <span class="hljs-number">2.92</span>    <span class="hljs-number">3.62</span>     <span class="hljs-number">1.96</span>     ;<br><span class="hljs-string">&#x27;M84&#x27;</span>    <span class="hljs-number">1</span>       <span class="hljs-number">1</span>       <span class="hljs-number">1</span>       <span class="hljs-number">5.25</span>    <span class="hljs-number">7.92</span>     <span class="hljs-number">3.12</span>     ;<br><span class="hljs-string">&#x27;C40&#x27;</span>   -<span class="hljs-number">2</span>      -<span class="hljs-number">1</span>       <span class="hljs-number">0</span>      -<span class="hljs-number">1.36</span>   -<span class="hljs-number">1.42</span>    -<span class="hljs-number">0.68</span>     ;<br><span class="hljs-string">&#x27;C41&#x27;</span>   -<span class="hljs-number">2</span>       <span class="hljs-number">0</span>       <span class="hljs-number">0</span>      -<span class="hljs-number">1.36</span>   -<span class="hljs-number">1.42</span>     <span class="hljs-number">0</span>        ;<br><span class="hljs-string">&#x27;C42&#x27;</span>   -<span class="hljs-number">2</span>      -<span class="hljs-number">1</span>      -<span class="hljs-number">1</span>      -<span class="hljs-number">1.36</span>   -<span class="hljs-number">1.42</span>    -<span class="hljs-number">0.68</span>     ;<br><span class="hljs-string">&#x27;C60&#x27;</span>    <span class="hljs-number">16</span>      <span class="hljs-number">0</span>       <span class="hljs-number">0</span>       <span class="hljs-number">8.32</span>    <span class="hljs-number">7.19</span>     <span class="hljs-number">0</span>        ;<br><span class="hljs-string">&#x27;C61&#x27;</span>    <span class="hljs-number">16</span>      <span class="hljs-number">4</span>       <span class="hljs-number">0</span>       <span class="hljs-number">8.32</span>    <span class="hljs-number">7.19</span>     <span class="hljs-number">2.08</span>     ;<br><span class="hljs-string">&#x27;C62&#x27;</span>    <span class="hljs-number">16</span>      <span class="hljs-number">0</span>       <span class="hljs-number">0</span>       <span class="hljs-number">8.32</span>    <span class="hljs-number">7.19</span>     <span class="hljs-number">0</span>        ;<br><span class="hljs-string">&#x27;C63&#x27;</span>    <span class="hljs-number">16</span>      <span class="hljs-number">4</span>       <span class="hljs-number">4</span>       <span class="hljs-number">8.32</span>    <span class="hljs-number">7.19</span>     <span class="hljs-number">2.08</span>     ;<br>&#125;;<br>HOSth <span class="hljs-built_in">=</span> cell2mat(HOSth(<span class="hljs-number">2</span>:end,<span class="hljs-number">2</span>:end));<br>lSNR <span class="hljs-built_in">=</span> length(SNR); <span class="hljs-comment">% SNR点数</span><br>lM <span class="hljs-built_in">=</span> length(M); <span class="hljs-comment">% 调制类型数</span><br>lMMC <span class="hljs-built_in">=</span> lM*lMC; <span class="hljs-comment">% 总样本数 = 调制类型数*蒙特卡洛次数</span><br>stat <span class="hljs-built_in">=</span> zeros(<span class="hljs-number">4</span>+Nt,lSNR*lMMC); <span class="hljs-comment">% 统计矩阵初始化</span><br>count <span class="hljs-built_in">=</span> <span class="hljs-number">1</span>;<br>for cptSNR<span class="hljs-built_in">=</span><span class="hljs-number">1</span>:lSNR<br>    for cptM<span class="hljs-built_in">=</span><span class="hljs-number">1</span>:lM<br>        for cptMC<span class="hljs-built_in">=</span><span class="hljs-number">1</span>:lMC           <br>            stat(<span class="hljs-number">1</span>,count) <span class="hljs-built_in">=</span> SNR(cptSNR);<span class="hljs-comment">% 记录SNR</span><br>            stat(<span class="hljs-number">2</span>,count) <span class="hljs-built_in">=</span> M(cptM); <span class="hljs-comment">% 记录真实调制索引</span><br>            count <span class="hljs-built_in">=</span> count+<span class="hljs-number">1</span>;      <br>        end<br>    end<br>end<br><span class="hljs-comment">%% 下面的代码使用那种方式就取消注释哪种方式即可</span><br><span class="hljs-comment">% HOSth = HOSth(9:end,:);        % &#x27;HOC only&#x27;时取消注释</span><br>for cptNt<span class="hljs-built_in">=</span><span class="hljs-number">1</span>:Nt<br>    <span class="hljs-comment">% HOC only</span><br>    <span class="hljs-comment">%mat_HOS_cptNt = mat_HOS(15:end,:,cptNt);</span><br>    <span class="hljs-comment">% HOC + 未去噪HOM</span><br>    mat_HOS_cptNt <span class="hljs-built_in">=</span> mat_HOS([<span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">8</span> <span class="hljs-number">10</span> <span class="hljs-number">12</span> <span class="hljs-number">14</span> <span class="hljs-number">15</span> <span class="hljs-number">16</span> <span class="hljs-number">17</span> <span class="hljs-number">18</span> <span class="hljs-number">19</span> <span class="hljs-number">20</span> <span class="hljs-number">21</span>],:,cptNt);<br>    <span class="hljs-comment">% HOC + 去噪HOM</span><br>    <span class="hljs-comment">% mat_HOS_cptNt = mat_HOS([1 2 4 6 7 9 11 13 15 16 17 18 19 20 21],:,cptNt);</span><br>    [~,resUz] <span class="hljs-built_in">=</span> min(pdist2(HOSth<span class="hljs-string">&#x27;,mat_HOS_cptNt&#x27;</span>,<span class="hljs-string">&#x27;euclidean&#x27;</span>)); <span class="hljs-comment">% MD classifier</span><br>    stat(<span class="hljs-number">2</span>+cptNt,:)<span class="hljs-built_in">=</span>resUz;<br>end<br><span class="hljs-comment">% 多天线结果融合</span><br><span class="hljs-built_in">if</span> Nt<span class="hljs-built_in">=</span><span class="hljs-built_in">=</span><span class="hljs-number">1</span><br>   stat(<span class="hljs-number">4</span>,:) <span class="hljs-built_in">=</span> stat(<span class="hljs-number">3</span>,:); <span class="hljs-comment">% 单天线直接复制</span><br><span class="hljs-built_in">else</span><br>   stat(<span class="hljs-number">3</span>+Nt,:) <span class="hljs-built_in">=</span> <span class="hljs-keyword">mode</span>(stat(<span class="hljs-number">3</span>:<span class="hljs-number">2</span>+Nt,:)); <span class="hljs-comment">% frequency (number of occurrences)</span><br>end<br>stat(<span class="hljs-number">4</span>+Nt,:) <span class="hljs-built_in">=</span> double(stat(<span class="hljs-number">2</span>,:)<span class="hljs-built_in">=</span><span class="hljs-built_in">=</span>stat(<span class="hljs-number">3</span>+Nt,:)); <span class="hljs-comment">% 生成二进制正确性标记向量（1=正确，0=错误）</span><br>pci <span class="hljs-built_in">=</span> zeros(<span class="hljs-number">1</span>,lSNR);<br>end_ <span class="hljs-built_in">=</span> <span class="hljs-number">0</span>;<br><span class="hljs-comment">% 按SNR分段统计正确识别率</span><br>for cptSNR<span class="hljs-built_in">=</span><span class="hljs-number">1</span>:lSNR<br>    beg_ <span class="hljs-built_in">=</span> end_+<span class="hljs-number">1</span>;<br>    end_ <span class="hljs-built_in">=</span> beg_+lMMC-<span class="hljs-number">1</span>; <span class="hljs-comment">% 当前SNR对应的数据段</span><br>    pci(cptSNR) <span class="hljs-built_in">=</span> sum(stat(<span class="hljs-number">4</span>+Nt,beg_:end_))/lMMC; <span class="hljs-comment">% 正确率</span><br>end<br>figure<br>plot(SNR,pci,<span class="hljs-string">&#x27;-o&#x27;</span>,<span class="hljs-string">&#x27;LineWidth&#x27;</span>,<span class="hljs-number">1.5</span>)   <span class="hljs-comment">% 添加样式：实线+圆圈标记</span><br>xlabel(<span class="hljs-string">&#x27;SNR&#x27;</span>, <span class="hljs-string">&#x27;FontSize&#x27;</span>, <span class="hljs-number">12</span>)<br>ylabel(<span class="hljs-string">&#x27;正确识别概率&#x27;</span>, <span class="hljs-string">&#x27;FontSize&#x27;</span>, <span class="hljs-number">12</span>)<br>grid on<br>set(gca, <span class="hljs-string">&#x27;FontWeight&#x27;</span>, <span class="hljs-string">&#x27;bold&#x27;</span>)       <span class="hljs-comment">% 坐标轴字体加粗</span><br></code></pre></td></tr></table></figure>
+
+<p>到这里，对论文的复现就完成了。</p>
+<h3 id="One-More-Thing"><a href="#One-More-Thing" class="headerlink" title="One More Thing"></a>One More Thing</h3><p>如果需要实现对某一信号分类的效果，也就是输入信号x，输出信号的调制方式1-6的效果，可以对代码做如下改进。</p>
+<figure class="highlight m"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br></pre></td><td class="code"><pre><code class="hljs m"><span class="hljs-comment">% 主函数，用于调制方式识别</span><br>function modulation_type <span class="hljs-built_in">=</span> modulate_and_identify(input_signal, SNR, Nt, Nr, K, pbee, cfo, phznoise)<br>    <span class="hljs-comment">% 1. 生成高阶统计量（HOS）</span><br>    HOS <span class="hljs-built_in">=</span> f_HOS_Extraction(input_signal, SNR, K, Nt, Nr, pbee, cfo, phznoise);<br>    <span class="hljs-comment">% 2. 理论HOS值，用于后续匹配</span><br>    HOSth <span class="hljs-built_in">=</span> &#123; <br>        <span class="hljs-string">&#x27;   &#x27;</span>  <span class="hljs-string">&#x27;B-PSK&#x27;</span> <span class="hljs-string">&#x27;Q-PSK&#x27;</span> <span class="hljs-string">&#x27;8-PSK&#x27;</span> <span class="hljs-string">&#x27;4-ASK&#x27;</span> <span class="hljs-string">&#x27;8-ASK&#x27;</span> <span class="hljs-string">&#x27;16-QAM&#x27;</span>;<br>        <span class="hljs-string">&#x27;M40&#x27;</span>   <span class="hljs-number">1</span>     -<span class="hljs-number">1</span>       <span class="hljs-number">0</span>       <span class="hljs-number">1.64</span>   <span class="hljs-number">1.77</span>   -<span class="hljs-number">0.67</span>;<br>        <span class="hljs-string">&#x27;M41&#x27;</span>   <span class="hljs-number">1</span>      <span class="hljs-number">0</span>       <span class="hljs-number">0</span>       <span class="hljs-number">1.64</span>   <span class="hljs-number">1.77</span>    <span class="hljs-number">0</span>;<br>        <span class="hljs-string">&#x27;M42&#x27;</span>   <span class="hljs-number">1</span>      <span class="hljs-number">1</span>       <span class="hljs-number">1</span>       <span class="hljs-number">1.64</span>   <span class="hljs-number">1.77</span>    <span class="hljs-number">1.32</span>;<br>        <span class="hljs-string">&#x27;M60&#x27;</span>   <span class="hljs-number">1</span>      <span class="hljs-number">0</span>       <span class="hljs-number">0</span>       <span class="hljs-number">2.92</span>   <span class="hljs-number">3.62</span>    <span class="hljs-number">0</span>;<br>        <span class="hljs-string">&#x27;M61&#x27;</span>   <span class="hljs-number">1</span>     -<span class="hljs-number">1</span>       <span class="hljs-number">0</span>       <span class="hljs-number">2.92</span>   <span class="hljs-number">3.62</span>   -<span class="hljs-number">1.32</span>;<br>        <span class="hljs-string">&#x27;M62&#x27;</span>   <span class="hljs-number">1</span>      <span class="hljs-number">0</span>       <span class="hljs-number">0</span>       <span class="hljs-number">2.92</span>   <span class="hljs-number">3.62</span>    <span class="hljs-number">0</span>;<br>        <span class="hljs-string">&#x27;M63&#x27;</span>   <span class="hljs-number">1</span>      <span class="hljs-number">1</span>       <span class="hljs-number">1</span>       <span class="hljs-number">2.92</span>   <span class="hljs-number">3.62</span>    <span class="hljs-number">1.96</span>;<br>        <span class="hljs-string">&#x27;M84&#x27;</span>   <span class="hljs-number">1</span>      <span class="hljs-number">1</span>       <span class="hljs-number">1</span>       <span class="hljs-number">5.25</span>   <span class="hljs-number">7.92</span>    <span class="hljs-number">3.12</span>;<br>        <span class="hljs-string">&#x27;C40&#x27;</span>  -<span class="hljs-number">2</span>     -<span class="hljs-number">1</span>       <span class="hljs-number">0</span>      -<span class="hljs-number">1.36</span>  -<span class="hljs-number">1.42</span>   -<span class="hljs-number">0.68</span>;<br>        <span class="hljs-string">&#x27;C41&#x27;</span>  -<span class="hljs-number">2</span>      <span class="hljs-number">0</span>       <span class="hljs-number">0</span>      -<span class="hljs-number">1.36</span>  -<span class="hljs-number">1.42</span>    <span class="hljs-number">0</span>;<br>        <span class="hljs-string">&#x27;C42&#x27;</span>  -<span class="hljs-number">2</span>     -<span class="hljs-number">1</span>      -<span class="hljs-number">1</span>      -<span class="hljs-number">1.36</span>  -<span class="hljs-number">1.42</span>   -<span class="hljs-number">0.68</span>;<br>        <span class="hljs-string">&#x27;C60&#x27;</span>  <span class="hljs-number">16</span>      <span class="hljs-number">0</span>       <span class="hljs-number">0</span>       <span class="hljs-number">8.32</span>   <span class="hljs-number">7.19</span>    <span class="hljs-number">0</span>;<br>        <span class="hljs-string">&#x27;C61&#x27;</span>  <span class="hljs-number">16</span>      <span class="hljs-number">4</span>       <span class="hljs-number">0</span>       <span class="hljs-number">8.32</span>   <span class="hljs-number">7.19</span>    <span class="hljs-number">2.08</span>;<br>        <span class="hljs-string">&#x27;C62&#x27;</span>  <span class="hljs-number">16</span>      <span class="hljs-number">0</span>       <span class="hljs-number">0</span>       <span class="hljs-number">8.32</span>   <span class="hljs-number">7.19</span>    <span class="hljs-number">0</span>;<br>        <span class="hljs-string">&#x27;C63&#x27;</span>  <span class="hljs-number">16</span>      <span class="hljs-number">4</span>       <span class="hljs-number">4</span>       <span class="hljs-number">8.32</span>   <span class="hljs-number">7.19</span>    <span class="hljs-number">2.08</span>;<br>    &#125;;<br>    HOSth <span class="hljs-built_in">=</span> cell2mat(HOSth(<span class="hljs-number">2</span>:end,<span class="hljs-number">2</span>:end));<br>    <span class="hljs-comment">% 3. 使用高阶矩进行调制识别</span><br>    [~, resUz] <span class="hljs-built_in">=</span> min(pdist2(HOSth<span class="hljs-string">&#x27;, HOS&#x27;</span>, <span class="hljs-string">&#x27;euclidean&#x27;</span>)); <span class="hljs-comment">% 最小距离分类法</span><br>    <span class="hljs-comment">% 4. 输出识别结果</span><br>    modulation_type <span class="hljs-built_in">=</span> get_modulation_type(resUz);<br>    disp([<span class="hljs-string">&#x27;识别的调制方式为: &#x27;</span>, modulation_type]);<br>end<br><br><span class="hljs-comment">% 调制方式的映射函数</span><br>function modulation_type <span class="hljs-built_in">=</span> get_modulation_type(index)<br>    modulation_types <span class="hljs-built_in">=</span> &#123;<span class="hljs-string">&#x27;B-PSK&#x27;</span>, <span class="hljs-string">&#x27;Q-PSK&#x27;</span>, <span class="hljs-string">&#x27;8-PSK&#x27;</span>, <span class="hljs-string">&#x27;4-ASK&#x27;</span>, <span class="hljs-string">&#x27;8-ASK&#x27;</span>, <span class="hljs-string">&#x27;16-QAM&#x27;</span>&#125;;<br>    modulation_type <span class="hljs-built_in">=</span> modulation_types&#123;index&#125;; <span class="hljs-comment">% 获取对应的调制方式</span><br>end<br><br><span class="hljs-comment">% HOS提取函数</span><br>function HOS <span class="hljs-built_in">=</span> f_HOS_Extraction(input_signal, SNR, K, Nt, Nr, pbee, cfo, phznoise)<br>    <span class="hljs-comment">% 信号预处理</span><br>    x <span class="hljs-built_in">=</span> input_signal;  <span class="hljs-comment">% 输入信号</span><br>    scale <span class="hljs-built_in">=</span> modnorm(x, <span class="hljs-string">&#x27;avpow&#x27;</span>, <span class="hljs-number">1</span>);   <span class="hljs-comment">% 归一化</span><br>    x_mod <span class="hljs-built_in">=</span> x * scale;  <span class="hljs-comment">% 归一化信号</span><br>    <span class="hljs-comment">% MIMO信道模拟</span><br>    H <span class="hljs-built_in">=</span> randn(Nr, Nt) + <span class="hljs-number">1</span>i * randn(Nr, Nt);<br>    y_mimo <span class="hljs-built_in">=</span> H * reshape(x_mod, Nt, []);<br>    <span class="hljs-comment">% 载波频率偏移（CFO）和相位噪声模型</span><br>    cfo_mat <span class="hljs-built_in">=</span> repmat(exp(<span class="hljs-number">2</span>i * pi * (<span class="hljs-number">1</span>:<span class="hljs-number">1</span>:K) * cfo), Nr, <span class="hljs-number">1</span>);<br>    y_mimo <span class="hljs-built_in">=</span> y_mimo .* cfo_mat;<br>    <span class="hljs-built_in">if</span> phznoise ~<span class="hljs-built_in">=</span> <span class="hljs-number">0</span><br>        for cptNr <span class="hljs-built_in">=</span> <span class="hljs-number">1</span>:Nr<br>            y_mimo(cptNr, :) <span class="hljs-built_in">=</span> phznoise(y_mimo(cptNr, :).<span class="hljs-string">&#x27;);</span><br><span class="hljs-string">        end</span><br><span class="hljs-string">    end</span><br><span class="hljs-string">    % 加噪声</span><br><span class="hljs-string">    y_mimo_SNR = awgn(y_mimo, SNR, &#x27;</span>measured<span class="hljs-string">&#x27;);</span><br><span class="hljs-string">    Pb = mean(abs(reshape(y_mimo_SNR - y_mimo, 1, []).^2)) + pbee; % 噪声功率估计</span><br><span class="hljs-string">    % BSS（盲源分离）</span><br><span class="hljs-string">    R = mean(real(x_mod).^4) / mean(real(x_mod).^2);</span><br><span class="hljs-string">    [W, yeg] = f_SCMA(Nt, Nr, y_mimo_SNR, R);</span><br><span class="hljs-string">    Pbf = Pb * W.&#x27;</span> * conj(W); <span class="hljs-comment">% 滤波后的噪声功率</span><br>    <span class="hljs-comment">% HOS特征提取</span><br>    for cpt <span class="hljs-built_in">=</span> <span class="hljs-number">1</span>:Nt<br>        HOS(cpt, :) <span class="hljs-built_in">=</span> f_CalcHOS(yeg(cpt, :), Pbf(cpt, cpt));<br>    end<br>end<br><br><span class="hljs-comment">% SCMA函数：用于盲源分离</span><br>function [G, yeg] <span class="hljs-built_in">=</span> f_SCMA(Nt, Nr, y_mimo_SNR, R)<br>    Ry <span class="hljs-built_in">=</span> (y_mimo_SNR * y_mimo_SNR<span class="hljs-string">&#x27;) / size(y_mimo_SNR, 2);</span><br><span class="hljs-string">    [U, SIG] = eig(Ry);  % 特征分解</span><br><span class="hljs-string">    SIG = SIG(Nr:-1:(Nr-Nt+1), Nr:-1:(Nr-Nt+1)); % 确保Nr&gt;=Nt</span><br><span class="hljs-string">    U = U(:, Nr:-1:(Nr-Nt+1));</span><br><span class="hljs-string">    B = (SIG^-0.5) * U&#x27;</span>;  <span class="hljs-comment">% 白化矩阵</span><br>    YW <span class="hljs-built_in">=</span> B * y_mimo_SNR;  <span class="hljs-comment">% 白化信号</span><br>    <span class="hljs-comment">% 初始化分离矩阵</span><br>    W <span class="hljs-built_in">=</span> eye(Nt);<br>    mu <span class="hljs-built_in">=</span> <span class="hljs-number">1</span>e-<span class="hljs-number">2</span>;  <span class="hljs-comment">% 步长</span><br>    <span class="hljs-comment">% 随机梯度下降（SGD）算法</span><br>    for ns <span class="hljs-built_in">=</span> <span class="hljs-number">1</span>:size(YW, <span class="hljs-number">2</span>)<br>        YW_ns <span class="hljs-built_in">=</span> YW(:, ns);<br>        z_ns <span class="hljs-built_in">=</span> W.<span class="hljs-string">&#x27; * YW_ns;</span><br><span class="hljs-string">        for n = 1:Nt</span><br><span class="hljs-string">            e = (real(z_ns(n)).^2 - R) .* real(z_ns(n));</span><br><span class="hljs-string">            W(:, n) = W(:, n) - mu * e .* conj(YW_ns);</span><br><span class="hljs-string">        end</span><br><span class="hljs-string">        W = f_GramSchmidt(W); % 正交化处理</span><br><span class="hljs-string">    end</span><br><span class="hljs-string">    yeg = W.&#x27;</span> * YW;<br>    G <span class="hljs-built_in">=</span> B.<span class="hljs-string">&#x27; * W;</span><br><span class="hljs-string">end</span><br><span class="hljs-string"></span><br><span class="hljs-string">% Gram-Schmidt正交化处理</span><br><span class="hljs-string">function Q = f_GramSchmidt(W)</span><br><span class="hljs-string">    Q = zeros(size(W));</span><br><span class="hljs-string">    Q(:, 1) = W(:, 1) / norm(W(:, 1));</span><br><span class="hljs-string"></span><br><span class="hljs-string">    for i = 2:size(W, 2)</span><br><span class="hljs-string">        s_proj = 0;</span><br><span class="hljs-string">        for j = 1:i-1</span><br><span class="hljs-string">            s_proj = s_proj + ((Q(:, j)&#x27;</span> * W(:, i)) / (Q(:, j)<span class="hljs-string">&#x27; * Q(:, j))) * Q(:, j);</span><br><span class="hljs-string">        end</span><br><span class="hljs-string"></span><br><span class="hljs-string">        e = W(:, i) - s_proj;</span><br><span class="hljs-string">        Q(:, i) = e / norm(e);</span><br><span class="hljs-string">    end</span><br><span class="hljs-string">end</span><br><span class="hljs-string"></span><br><span class="hljs-string">% HOS计算函数</span><br><span class="hljs-string">function hos = f_CalcHOS(x, Pb)</span><br><span class="hljs-string">    x = x - mean(x);</span><br><span class="hljs-string"></span><br><span class="hljs-string">    m20 = real(mean(x.^2));</span><br><span class="hljs-string">    m22 = real(mean(conj(x).^2));</span><br><span class="hljs-string">    m40 = real(mean(x.^4));</span><br><span class="hljs-string">    m60 = real(mean(x.^6));</span><br><span class="hljs-string"></span><br><span class="hljs-string">    m21y = real(mean(x .* (conj(x))));</span><br><span class="hljs-string">    m41y = real(mean((x.^3) .* (conj(x))));</span><br><span class="hljs-string">    m42y = real(mean((x.^2) .* (conj(x).^2)));</span><br><span class="hljs-string">    m43y = real(mean(x .* (conj(x).^3)));</span><br><span class="hljs-string">    m61y = real(mean((x.^5) .* (conj(x))));</span><br><span class="hljs-string">    m62y = real(mean((x.^4) .* (conj(x).^2)));</span><br><span class="hljs-string">    m63y = real(mean((x.^3) .* (conj(x).^3)));</span><br><span class="hljs-string">    m84y = real(mean((x.^4) .* (conj(x).^4)));</span><br><span class="hljs-string"></span><br><span class="hljs-string">    m21 = m21y - Pb;</span><br><span class="hljs-string">    m41 = m41y - 3 * m20 * Pb;</span><br><span class="hljs-string">    m42 = m42y - 2 * Pb^2 - 4 * Pb * m21;</span><br><span class="hljs-string">    m43 = m43y - 3 * m22 * Pb;</span><br><span class="hljs-string">    m61 = m61y - 5 * m40 * Pb;</span><br><span class="hljs-string">    m62 = m62y - 12 * m20 * Pb^2 - 8 * m41 * Pb;</span><br><span class="hljs-string">    m63 = m63y - 18 * m21 * Pb^2 - 9 * m42 * Pb - 6 * Pb^3;</span><br><span class="hljs-string">    m84 = m84y - 16 * m63 * Pb - 72 * m42 * Pb^2 - 96 * m21 * Pb^3 - 24 * Pb^4;</span><br><span class="hljs-string"></span><br><span class="hljs-string">    c40 = m40 - 3 * (m20.^2);</span><br><span class="hljs-string">    c60 = m60 - 15 * m20 * m40 + 30 * (m20.^3);</span><br><span class="hljs-string"></span><br><span class="hljs-string">    c41 = m41 - 3 * m20 * m21;</span><br><span class="hljs-string">    c42 = m42 - (abs(m20).^2) - 2 * (m21.^2);</span><br><span class="hljs-string">    c61 = m61 - 5 * m21 * m40 - 10 * m20 * m41 + 30 * m21 * (m20.^2);</span><br><span class="hljs-string">    c62 = m62 - 6 * m42 * m20 - 8 * m21 * m41 - m22 * m40 + 6 * m22 * m20^2 + 24 * m20 * m21^2;</span><br><span class="hljs-string">    c63 = m63 - 9 * m42 * m21 + 12 * (m21.^3) - 3 * m20 * m43 - 3 * m22 * m41 + 18 * m20 * m21 * m22;</span><br><span class="hljs-string"></span><br><span class="hljs-string">    hos = real([m40 m41 m42 m60 m61 m62 m63 m84 c40 c41 c42 c60 c61 c62 c63]);</span><br><span class="hljs-string">end</span><br><span class="hljs-string"></span><br><span class="hljs-string">Nt = 2;       % 发射天线数量</span><br><span class="hljs-string">Nr = 6;       % 接收天线数量</span><br><span class="hljs-string">K = 4000;     % 传输的MIMO符号数量</span><br><span class="hljs-string">SNR = 10;     % 信噪比（dB）</span><br><span class="hljs-string">pbee = 0.01;  % 噪声功率估计误差</span><br><span class="hljs-string">cfo = 1e-4;   % 载波频率偏移</span><br><span class="hljs-string">phznoise = 0; % 相位噪声模型（0代表无相位噪声）</span><br><span class="hljs-string">% 生成一个模拟的输入信号（例如，16-QAM调制）</span><br><span class="hljs-string">M = 6; % 假设已知的调制类型为16-QAM（M = 6）</span><br><span class="hljs-string">x = randi([0, 15], 1, Nt * K); % 生成16-QAM信号的符号</span><br><span class="hljs-string">x_mod = qammod(x, 16);          % 调制为16-QAM信号</span><br><span class="hljs-string">input_signal = x_mod;           % 输入信号</span><br><span class="hljs-string">% 调用调制识别函数</span><br><span class="hljs-string">modulation_type = modulate_and_identify(input_signal, SNR, Nt, Nr, K, pbee, cfo, phznoise);</span><br><span class="hljs-string">% 显示结果</span><br><span class="hljs-string">disp([&#x27;</span>识别的调制方式为: <span class="hljs-string">&#x27;, modulation_type]);</span><br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0/" class="category-chain-item">论文复现</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0/%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/" class="category-chain-item">信号处理</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0/" class="print-no-link">#论文复现</a>
+      
+        <a href="/tags/%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/" class="print-no-link">#信号处理</a>
+      
+        <a href="/tags/%E8%B0%83%E5%88%B6%E8%AF%86%E5%88%AB/" class="print-no-link">#调制识别</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>调制识别HOM去噪方法</div>
+      <div>http://example.com/2025/05/24/调制识别HOM去噪方法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Yifan Xie</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年5月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/05/23/%E6%B1%A4%E5%B0%8F%E4%B8%B9OS%E4%B9%A6%E5%90%8E%E7%AD%94%E6%A1%88/" title="汤小丹操作系统大学教材书后答案">
+                        <span class="hidden-mobile">汤小丹操作系统大学教材书后答案</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  var relativeDate = function() {
+    var updatedTime = document.getElementById('updated-time');
+    if (updatedTime) {
+      var text = updatedTime.textContent;
+      var reg = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})/;
+      var matchs = text.match(reg);
+      if (matchs) {
+        var relativeTime = moment(matchs[0]).fromNow();
+        updatedTime.textContent = text.replace(reg, relativeTime);
+      }
+      updatedTime.style.display = '';
+    }
+  };
+  Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/moment.min.js', function() {
+    if (!'zh-cn'.startsWith('en')) {
+      Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/locale/zh-cn.min.js', function() {
+        relativeDate();
+      });
+    } else {
+      relativeDate();
+    }
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
